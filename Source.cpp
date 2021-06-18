@@ -69,7 +69,65 @@ void printStack(const STACK* head, char polsk[]) {
     }
     while (polskaya) { printf("%c", polskaya->value); polsk[i] = polskaya->value; i += 1; polskaya = polskaya->pnext; }
 }
-
+int rezultat(char polsk[])
+{
+    int rez[1000] = { 0 };//массив подсчета результата
+    int i = 0;
+    int i2 = 0;
+    while (polsk[i] != '\0')
+    {
+        if (polsk[i] == '+')
+        {
+            rez[i2 - 2] = rez[i2 - 2] + rez[i2 - 1];
+            rez[i2 - 1] = 0;
+            i2 -= 1;
+        }
+        if (polsk[i] == '-' && polsk[i+1] ==' ' )
+        {
+            rez[i2 - 2] = rez[i2 - 2] - rez[i2 - 1];
+            rez[i2 - 1] = 0;
+            i2 -= 1;
+        }
+        if (polsk[i] == '*')
+        {
+            rez[i2 - 2] = rez[i2 - 2] * rez[i2 - 1];
+            rez[i2 - 1] = 0;
+            i2 -= 1;
+        }
+        if (polsk[i] == '/')
+        {
+            rez[i2 - 2] = rez[i2 - 2] / rez[i2 - 1];
+            rez[i2 - 1] = 0;
+            i2 -= 1;
+        }
+        if (polsk[i] >= '0' && polsk[i] <= '9')
+        {
+            if (polsk[i - 1] != '-') {
+            rez[i2] = (int)polsk[i] - 48; i += 1;
+            
+                while (polsk[i] >= '0' && polsk[i] <= '9')
+                {
+                    rez[i2] = rez[i2] * 10 + ((int)polsk[i] - 48); i += 1;
+                }
+            }
+            else
+            {
+                rez[i2] = -((int)polsk[i] - 48); i += 1;
+                while (polsk[i] >= '0' && polsk[i] <= '9')
+                {
+                    rez[i2] = rez[i2] * 10 - ((int)polsk[i] - 48); i += 1;
+                }
+            }
+            i2 += 1;
+            if (polsk[i] == '+' || polsk[i] == '-' || polsk[i] == '/' || polsk[i] == '*')
+            {
+                i -= 1;
+            }
+        }
+        i += 1;
+    }
+    return  rez[0];
+}
 /////////////////////////////////////////
 int main()
 {
@@ -185,4 +243,6 @@ int main()
     }
     printf("Reverse Polish Notation:\n");
     printStack(tsifri, polsk);
+    polsk[strlen(polsk)] = '\0';
+    printf("\nResult:\n%i", rezultat(polsk));
 }
