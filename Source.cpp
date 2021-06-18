@@ -42,10 +42,10 @@ typedef struct STACK
     char value;
     struct STACK* pnext;
 }STACK;
-STACK* Push(STACK* phead, char v)
+STACK* Push(STACK* tsifri, char v)
 {
     STACK* pnew = (STACK*)malloc(sizeof(STACK));
-    pnew->pnext = phead;
+    pnew->pnext = tsifri;
     pnew->value = v;
     return pnew;
 }
@@ -69,9 +69,9 @@ void printStack(const STACK* head, char polsk[]) {
     }
     while (polskaya) { printf("%c", polskaya->value); polsk[i] = polskaya->value; i += 1; polskaya = polskaya->pnext; }
 }
-int rezultat(char polsk[])
+double rezultat(char polsk[])
 {
-    int rez[1000] = { 0 };//массив подсчета результата
+    double rez[1000] = { 0 };//массив подсчета результата
     int i = 0;
     int i2 = 0;
     while (polsk[i] != '\0')
@@ -109,6 +109,19 @@ int rezultat(char polsk[])
                 {
                     rez[i2] = rez[i2] * 10 + ((int)polsk[i] - 48); i += 1;
                 }
+                if (polsk[i] == '.')
+                {
+                    i += 1;
+                    double x = 0;
+                    while (polsk[i] >= '0' && polsk[i] <= '9')
+                    {
+                        double z = 0.1;
+                        x = x + ((int)polsk[i] - 48) *z;
+                        i += 1;
+                        z = z / 10;
+                    }
+                    rez[i2] = rez[i2] + x;
+                }
             }
             else
             {
@@ -116,6 +129,19 @@ int rezultat(char polsk[])
                 while (polsk[i] >= '0' && polsk[i] <= '9')
                 {
                     rez[i2] = rez[i2] * 10 - ((int)polsk[i] - 48); i += 1;
+                }
+                if (polsk[i] == '.')
+                {
+                    i += 1;
+                    double x = 0;
+                    while (polsk[i] >= '0' && polsk[i] <= '9')
+                    {
+                        double z = 0.1;
+                        x = x + ((int)polsk[i] - 48) * z;
+                        i += 1;
+                        z = z / 10;
+                    }
+                    rez[i2] = rez[i2] - x;
                 }
             }
             i2 += 1;
@@ -134,12 +160,13 @@ int main()
     // добавл€йте пустую строку пожалуйста
     FILE* input = fopen("input.txt", "rt");
     printf("Expression:\n");
-    char* str = (char*)malloc(sizeof(STACK));
+    //char* str = (char*)malloc(sizeof(STACK));
+    char str[100] = { 0 };
     fgets(str, SIZE, input);
     int len = strlen(str);
     str[len] = '\0';
     printf("%s\n", str);
-    STACK* tsifri = 0;  //стек с числами
+    STACK* tsifri = NULL;  //стек с числами
     STACKzn* znaki = 0; //стек со знаками oper
     char polsk[100] = { 0 };
     char vivod[100];
@@ -160,16 +187,16 @@ int main()
                 tsifri = Push(tsifri, str[i]);
                 i += 1;
             }
-            /*if (str[i + 1] < '0' || str[i + 1] >'9') 
+            if ((str[i + 1] < '0' || str[i + 1] >'9')&& str[i+1]!='.') 
             { tsifri = Push(tsifri, str[i]);
             tsifri = Push(tsifri, ' '); }
-            else {*/
-                while (str[i] >= '0' && str[i] <= '9')
+            else {
+                while ((str[i] >= '0' && str[i] <= '9')|| str[i]=='.')
                 {
                     tsifri = Push(tsifri, str[i]);
                     i += 1;
                 }tsifri = Push(tsifri, ' ');
-            //}
+            }
         }
         if (str[i] == '(')
         {
@@ -244,5 +271,5 @@ int main()
     printf("Reverse Polish Notation:\n");
     printStack(tsifri, polsk);
     polsk[strlen(polsk)] = '\0';
-    printf("\nResult:\n%i", rezultat(polsk));
+    printf("\nResult:\n%.2lf", rezultat(polsk));
 }
