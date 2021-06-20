@@ -102,7 +102,7 @@ double rezultat(char polsk[])
         }
         if (polsk[i] >= '0' && polsk[i] <= '9')
         {
-            if (polsk[i - 1] != '-') {
+            if (polsk[i - 1] != '-' || (polsk[i - 1] == '-' && polsk[i - 2] == '-')) {
             rez[i2] = (int)polsk[i] - 48; i += 1;
             
                 while (polsk[i] >= '0' && polsk[i] <= '9')
@@ -180,18 +180,20 @@ int main()
     }
     for (int i = 0; i < len; i++)
     {
-        if ((str[i] >= '0' && str[i] <= '9') || (str[i]=='-' && (str[i+1] >= '0' && str[i + 1] <='9')))
+        if ((str[i] >= '0' && str[i] <= '9') || (str[i] == '-' && (str[i + 1] >= '0' && str[i + 1] <= '9')))
         {
-            if (str[i]=='-')
+            if (str[i] == '-')
             {
                 tsifri = Push(tsifri, str[i]);
                 i += 1;
             }
-            if ((str[i + 1] < '0' || str[i + 1] >'9')&& str[i+1]!='.') 
-            { tsifri = Push(tsifri, str[i]);
-            tsifri = Push(tsifri, ' '); }
+            if ((str[i + 1] < '0' || str[i + 1] >'9') && str[i + 1] != '.')
+            {
+                tsifri = Push(tsifri, str[i]);
+                tsifri = Push(tsifri, ' ');
+            }
             else {
-                while ((str[i] >= '0' && str[i] <= '9')|| str[i]=='.')
+                while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.')
                 {
                     tsifri = Push(tsifri, str[i]);
                     i += 1;
@@ -203,7 +205,7 @@ int main()
             znaki = PushZn(znaki, '(');
             continue;
         }
-        if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/')
+        if ((str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/') && str[i + 1]==' ')
         {
             if (IsEmptyZn(znaki) || prior(str[i]) > prior(znaki->value))
             {
@@ -236,6 +238,11 @@ int main()
         {
             char peremennaya[10] = { 0 };
             int p = 0;
+            if (str[i - 1] == '-')
+            {
+                tsifri = Push(tsifri, str[i - 1]);
+                // i += 1;
+            }
                while (str[i]!=' ' && str[i] != '\n')// после названия переменной пусть обязательно будет пробел
                 {
                    peremennaya[p] = str[i];
@@ -247,6 +254,7 @@ int main()
                    while (variables[j][k] != ' ') { vvod_p[k] = variables[j][k]; k += 1; }
                    if (strcmp(peremennaya, vvod_p) == 0)
                    {
+                      
                        k += 3;
                        while (variables[j][k]!='\n' && variables[j][k] != '\0')
                        {
