@@ -6,6 +6,7 @@
 #include "structures.h"
 #include "functions.h"
 
+
 int main()
 {
     // добавл€йте пустую строку пожалуйста
