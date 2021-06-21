@@ -45,12 +45,13 @@ int main()
                 tsifri = Push(tsifri, ' ');
             }
             else {
-                while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.')
+                while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i]=='+' || str[i]=='-')
                 {
                     tsifri = Push(tsifri, str[i]);
                     i += 1;
                 }tsifri = Push(tsifri, ' ');
             }
+
         }
         if (str[i] == '(')
         {
