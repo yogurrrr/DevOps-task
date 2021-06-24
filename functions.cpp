@@ -175,7 +175,7 @@ void Iz_char_v_double(char polsk[], COMPLEX rez[], int i, int i2)
     }
 }
 
-double rezultat(char polsk[])
+COMPLEX rezultat(char polsk[])
 {
     COMPLEX rez[1000] = { 0 };//массив подсчета результата
     int i = 0;
@@ -186,24 +186,46 @@ double rezultat(char polsk[])
         {
             rez[i2 - 2].real = rez[i2 - 2].real + rez[i2 - 1].real;
             rez[i2 - 1].real = 0;
+            rez[i2 - 2].imag = rez[i2 - 2].imag + rez[i2 - 1].imag;
+            rez[i2 - 1].imag = 0;
             i2 -= 1;
         }
         if (polsk[i] == '-' && polsk[i + 1] == ' ')
         {
             rez[i2 - 2].real = rez[i2 - 2].real - rez[i2 - 1].real;
             rez[i2 - 1].real = 0;
+            rez[i2 - 2].imag = rez[i2 - 2].imag - rez[i2 - 1].imag;
+            rez[i2 - 1].imag = 0;
             i2 -= 1;
         }
         if (polsk[i] == '*')
         {
-            rez[i2 - 2].real = rez[i2 - 2].real * rez[i2 - 1].real;
-            rez[i2 - 1].real = 0;
+            if (rez[i2 - 1].imag != 0 && rez[i2 - 2].imag != 0)
+            {
+                rez[i2 - 2] = multiplication(rez[i2 - 1], rez[i2 - 2]);
+                rez[i2 - 1].real = 0;
+                rez[i2 - 1].imag = 0;
+            }
+            else {
+                rez[i2 - 2].real = rez[i2 - 2].real * rez[i2 - 1].real;
+                rez[i2 - 1].real = 0;
+                rez[i2 - 2].imag = rez[i2 - 2].imag * rez[i2 - 1].imag;
+                rez[i2 - 1].imag = 0;
+            }
             i2 -= 1;
         }
         if (polsk[i] == '/')
         {
-            rez[i2 - 2].real = rez[i2 - 2].real / rez[i2 - 1].real;
-            rez[i2 - 1].real = 0;
+            if (rez[i2 - 1].imag != 0 && rez[i2 - 2].imag != 0)
+            {
+                rez[i2 - 2] = division(rez[i2 - 1], rez[i2 - 2]);
+                rez[i2 - 1].real = 0;
+                rez[i2 - 1].imag = 0;
+            }
+            else {
+                rez[i2 - 2].real = rez[i2 - 2].real / rez[i2 - 1].real;
+                rez[i2 - 1].real = 0;
+            }
             i2 -= 1;
         }
         if (polsk[i] >= '0' && polsk[i] <= '9')
@@ -233,7 +255,7 @@ double rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i - 1] != 'j') i += 1;
+                    while (polsk[i - 1] != ' ') i += 1;
                 }
             }
             else
@@ -260,7 +282,7 @@ double rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i - 1] != 'j') i += 1;
+                    while (polsk[i - 1] != ' ') i += 1;
                 }
             }
             i2 += 1;
@@ -276,7 +298,7 @@ double rezultat(char polsk[])
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
-                while (polsk[i - 1] != 'j') i += 1;
+                while (polsk[i - 1] != ' ') i += 1;
                 //            complex_sin(rez[i2]);
             }
             else rez[i2].real = sin(rez[i2].real);
@@ -289,7 +311,7 @@ double rezultat(char polsk[])
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
-                while (polsk[i - 1] != 'j') i += 1;
+                while (polsk[i - 1] != ' ') i += 1;
                 complex_cos(rez[i2]);
             }
             else
@@ -303,7 +325,7 @@ double rezultat(char polsk[])
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
-                while (polsk[i - 1] != 'j') i += 1;
+                while (polsk[i - 1] != ' ') i += 1;
                 complex_tg(rez[i2]);
             }
             else
@@ -317,7 +339,7 @@ double rezultat(char polsk[])
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
-                while (polsk[i - 1] != 'j') i += 1;
+                while (polsk[i - 1] != ' ') i += 1;
                 //                complex_log(rez[i2]);
             }
             else
@@ -331,7 +353,7 @@ double rezultat(char polsk[])
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
-                while (polsk[i - 1] != 'j') i += 1;
+                while (polsk[i - 1] != ' ') i += 1;
                 //               complex_ln(rez[i2]);
             }
             else
@@ -345,7 +367,7 @@ double rezultat(char polsk[])
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
-                while (polsk[i - 1] != 'j') i += 1;
+                while (polsk[i - 1] != ' ') i += 1;
                 //               Complex_sqrt(rez[i2]);
             }
             else
@@ -369,7 +391,7 @@ double rezultat(char polsk[])
         }
         i += 1;
     }
-    return rez[0].real;
+    return rez[0];
 }
 
 COMPLEX complex_cos(COMPLEX num)

@@ -12,7 +12,7 @@ STACKzn* PopZn(STACKzn* phead);
 void printStack(const STACK* head, char polsk[]);
 void Zapis_imag(COMPLEX rez[], int i, int i2, char polsk[]);
 void Iz_char_v_double(char polsk[], COMPLEX rez[], int i, int i2);
-double rezultat(char polsk[]);
+COMPLEX rezultat(char polsk[]);
 COMPLEX complex_cos(COMPLEX num);
 COMPLEX complex_tg(COMPLEX num);
 double imag(COMPLEX num);

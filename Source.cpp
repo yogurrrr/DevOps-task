@@ -146,5 +146,6 @@ int main()
     printf("Reverse Polish Notation:\n");
     printStack(tsifri, polsk);
     polsk[strlen(polsk)] = '\0';
-    printf("\nResult:\n%.2lf", rezultat(polsk));
+    COMPLEX itog = rezultat(polsk);
+    printf("\nResult:\n%.2lf %.2lfj", itog.real, itog.imag);
 }
