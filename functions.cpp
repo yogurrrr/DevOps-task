@@ -463,3 +463,146 @@ COMPLEX pow_complex(COMPLEX num, int power)
     }
     return result;
 }
+
+/////////////////////////////////////////////////////////////////////////////////
+COMPLEX complex_sin(COMPLEX num)
+{
+    COMPLEX result = { 0 };
+    result.real = sin(num.real) * cosh(num.imag);
+    result.imag = cos(num.real) * sinh(num.imag);
+    return result;
+}
+
+COMPLEX complex_ln(COMPLEX num)
+{
+    COMPLEX result = { 0 };
+    result.real = log(sqrt(num.real * num.real + num.imag * num.imag));
+    result.imag = atan(num.imag / num.real); 
+    return result;
+}
+
+double abs(COMPLEX num)
+{
+    return sqrt(num.real * num.real + num.imag * num.imag);
+}
+
+double real(COMPLEX num)
+{
+    return num.real;
+}
+
+double exp(COMPLEX num)
+{
+    return (exp(num.real)*(cos(num.imag)+sin(num.imag)));
+}
+
+double mag(COMPLEX num)
+{
+    return sqrt(num.real * num.real + num.imag * num.imag);
+}
+
+COMPLEX sqrt(COMPLEX num)
+{
+    double argz = 0;
+    COMPLEX result = { 0 };
+    if (num.real > 0)
+    {
+        if (num.imag >= 0)
+        {
+            argz = atan(num.imag / num.real);
+        }
+        else
+            if (num.imag < 0)
+            {
+                argz = (2*M_PI - tan(num.imag / num.real));
+            }
+    }
+    else 
+        if (num.real < 0)
+        {
+            if (num.imag >= 0)
+            {
+                argz = M_PI - atan(num.imag / num.real);
+            }
+            else
+                if (num.imag < 0)
+                {
+                    argz = (M_PI + tan(num.imag / num.real));
+                }
+        }
+        else 
+            if (num.real == 0)
+            {
+                if (num.imag > 0)
+                {
+                    argz = M_PI/2;
+                }
+                else
+                    if (num.imag < 0)
+                    {
+                        argz = (3 * M_PI)/ 2;
+                    }
+            }
+    result.real = ((sqrt(sqrt(num.real * num.real + num.imag * num.imag))) * cos(argz / 2));
+    result.imag = ((sqrt(sqrt(num.real * num.real + num.imag * num.imag))) * sin(argz / 2));
+    return result;
+}
+
+COMPLEX ln(COMPLEX num)
+{
+    double argz = 0;
+    COMPLEX result = { 0 };
+    if (num.imag == 0)
+    {
+        result.real = log(num.real);
+    }
+    else
+    {
+        if (num.real > 0)
+        {
+            if (num.imag >= 0)
+            {
+                argz = atan(num.imag / num.real);
+            }
+            else
+                if (num.imag < 0)
+                {
+                    argz = (2 * M_PI - tan(num.imag / num.real));
+                }
+        }
+        else
+            if (num.real < 0)
+            {
+                if (num.imag >= 0)
+                {
+                    argz = M_PI - atan(num.imag / num.real);
+                }
+                else
+                    if (num.imag < 0)
+                    {
+                        argz = (M_PI + tan(num.imag / num.real));
+                    }
+            }
+            else
+                if (num.real == 0)
+                {
+                    if (num.imag > 0)
+                    {
+                        argz = M_PI / 2;
+                    }
+                    else
+                        if (num.imag < 0)
+                        {
+                            argz = (3 * M_PI) / 2;
+                        }
+                }
+        result.real = log(sqrt(num.real * num.real + num.imag * num.imag));
+        result.imag = argz;
+    }
+    return result;
+}   
+
+double log(COMPLEX num1, COMPLEX num2)
+{
+    return (log(num1.real) / log(num2.real));
+}

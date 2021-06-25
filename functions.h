@@ -22,7 +22,14 @@ COMPLEX subtraction(COMPLEX num1, COMPLEX num2); //вычитание
 COMPLEX multiplication(COMPLEX num1, COMPLEX num2); //умножение
 COMPLEX division(COMPLEX num1, COMPLEX num2); //деление
 COMPLEX pow_complex(COMPLEX num, int power);
-
-
-
+/////////////////////////////////////////////
+COMPLEX complex_sin(COMPLEX num);
+COMPLEX complex_ln(COMPLEX num);
+double abs(COMPLEX num);
+double real(COMPLEX num);
+double exp(COMPLEX num);
+double mag(COMPLEX num);
+COMPLEX sqrt(COMPLEX num);
+COMPLEX ln(COMPLEX num);
+double log(COMPLEX num1, COMPLEX num2);
 #endif // !FUNCTIONS_H
