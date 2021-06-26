@@ -13,6 +13,7 @@ void printStack(const STACK* head, char polsk[]);
 COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str[100], int len, STACK* tsifri, STACKzn* znaki, int c);
 void Zapis_imag(COMPLEX rez[], int i, int i2, char polsk[]);
 void Iz_char_v_double(char polsk[], COMPLEX rez[], int i, int i2);
+void Iz_double_v_char(double num, char string_num[]);
 COMPLEX rezultat(char polsk[]);
 COMPLEX complex_cos(COMPLEX num);
 COMPLEX complex_tg(COMPLEX num);
