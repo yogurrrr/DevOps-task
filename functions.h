@@ -25,11 +25,11 @@ COMPLEX pow_complex(COMPLEX num, int power);
 /////////////////////////////////////////////
 COMPLEX complex_sin(COMPLEX num);
 COMPLEX complex_ln(COMPLEX num);
-double abs(COMPLEX num);
-double real(COMPLEX num);
-double exp(COMPLEX num);
-double mag(COMPLEX num);
-COMPLEX sqrt(COMPLEX num);
-COMPLEX ln(COMPLEX num);
-double log(COMPLEX num1, COMPLEX num2);
+double Complex_abs(COMPLEX num);
+double Complex_real(COMPLEX num);
+double Complex_exp(COMPLEX num);
+double Complex_mag(COMPLEX num);
+COMPLEX Complex_sqrt(COMPLEX num);
+COMPLEX Complex_ln(COMPLEX num);
+double Complex_log(COMPLEX num1, COMPLEX num2);
 #endif // !FUNCTIONS_H
