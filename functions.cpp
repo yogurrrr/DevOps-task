@@ -170,7 +170,7 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
                 {
 
                     k += 3;
-                    while (variables[j][k] != '\n' && variables[j][k] != '\0')
+                    while (variables[j][k] != '\n' && variables[j][k] != '\0' && variables[j][k] != 'j')
                     {
                         tsifri = Push(tsifri, variables[j][k]);
                         k += 1;
@@ -553,7 +553,7 @@ COMPLEX rezultat(char polsk[])
                 rez[i2].imag = 0;
             }
             else {
-                rez[i2].real = exp(rez[i2].real);
+                if (rez[i2].real < 0) { rez[i2].real = -(rez[i2].real); }
             }
             i2 += 1;
         }
