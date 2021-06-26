@@ -33,7 +33,7 @@ int main()
     if(c>0) c2=c-1;
     while (c2 != -1)
     {
-        char str2[100] = { 0 };
+        char str2[1000] = { 0 };
         int i = 0; int len2 = 0;
         while (variables[c2][i] != '=')i++; i += 2; int perezap = i; // с этого знака начнем перезаписывать выражение
         while (variables[c2][i] != '/n' && variables[c2][i] != '/0' && variables[c2][i] != 0) {
@@ -44,8 +44,8 @@ int main()
         str2[len2] = '\0';
         STACK* tsifri2 = NULL;  //стек с числами
         STACKzn* znaki2 = 0; //стек со знаками oper
-        char polsk2[100] = { 0 };
-        char vivod2[100];
+        char polsk2[1000] = { 0 };
+        char vivod2[1000];
         int i2 = 0;
         for (int i = c2 + 1; i < c; ++i)
         {
@@ -56,7 +56,7 @@ int main()
         // здесь нужно сообразить функцию, которая преобразует Itog2 из double в char и перезаписать строку в variables[c2];
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! нужно обнулить вариэйблз
         variables[c2][perezap]= '\0';
-        char string_num1[20]; char string_num2[20];
+        char string_num1[20] = { 0 }; char string_num2[20] = { 0 };
         Iz_double_v_char(Itog2.real, string_num1); int sn1 = 0;
         while (string_num1[sn1] != -52 && string_num1[sn1] != '\0')
         {
