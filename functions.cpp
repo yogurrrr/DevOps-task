@@ -223,6 +223,29 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
                 }
 
             }
+            if ((strcmp(peremennaya, "Pi") == 0) || (strcmp(peremennaya, "PI") == 0) || (strcmp(peremennaya, "e") == 0))
+            {
+                if (peremennaya[0] == 'e') {
+                    tsifri = Push(tsifri, '2');
+                    tsifri = Push(tsifri, '.');
+                    tsifri = Push(tsifri, '7');
+                    tsifri = Push(tsifri, '1');
+                    tsifri = Push(tsifri, '8');
+                    tsifri = Push(tsifri, ' ');
+                }
+                else
+                {
+                    tsifri = Push(tsifri, '3');
+                    tsifri = Push(tsifri, '.');
+                    tsifri = Push(tsifri, '1');
+                    tsifri = Push(tsifri, '4');
+                    tsifri = Push(tsifri, '1');
+                    tsifri = Push(tsifri, '5');
+                    tsifri = Push(tsifri, ' ');
+
+                   
+                }
+            }
             for (int j = 0; j < c ; ++j)
             {
                 int k = 0; char vvod_p[10] = { 0 };
