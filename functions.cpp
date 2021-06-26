@@ -251,7 +251,7 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
         tsifri = Push(tsifri, ' ');
         znaki = PopZn(znaki);
     }
-    printf("Reverse Polish Notation:\n");
+    printf("\nReverse Polish Notation:\n");
     printStack(tsifri, polsk);
     polsk[strlen(polsk)] = '\0';
     COMPLEX Itog = rezultat(polsk);
@@ -376,11 +376,17 @@ COMPLEX rezultat(char polsk[])
         }
         if (polsk[i] == '-' && polsk[i + 1] == ' ')
         {
-            rez[i2 - 2].real = rez[i2 - 2].real - rez[i2 - 1].real;
-            rez[i2 - 1].real = 0;
-            rez[i2 - 2].imag = rez[i2 - 2].imag - rez[i2 - 1].imag;
-            rez[i2 - 1].imag = 0;
-            i2 -= 1;
+            if (i2 != 1) {
+                rez[i2 - 2].real = rez[i2 - 2].real - rez[i2 - 1].real;
+                rez[i2 - 1].real = 0;
+                rez[i2 - 2].imag = rez[i2 - 2].imag - rez[i2 - 1].imag;
+                rez[i2 - 1].imag = 0;
+                i2 -= 1;
+            }
+            else {
+                rez[i2 - 1].real = -rez[i2 - 1].real;
+                rez[i2 - 1].imag = -rez[i2 - 1].imag;
+            }
         }
         if (polsk[i] == '*')
         {
