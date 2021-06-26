@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #define M_PI 3.14159265358979323846
 #define M_E 2.71828182845904523536
@@ -73,7 +74,128 @@ void printStack(const STACK* head, char polsk[])
 }
 
 
+COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str[100], int len, STACK* tsifri, STACKzn* znaki, int c)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if ((str[i] >= '0' && str[i] <= '9') || (str[i] == '-' && (str[i + 1] >= '0' && str[i + 1] <= '9')))
+        {
+            if (str[i] == '-')
+            {
+                tsifri = Pop(tsifri);
+                tsifri = Push(tsifri, str[i]);
+                i += 1;
+            }
+            if ((str[i + 1] < '0' || str[i + 1] >'9') && str[i + 1] != '.')
+            {
+                tsifri = Push(tsifri, str[i]);
+                tsifri = Push(tsifri, ' ');
+            }
+            else {
+                while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i] == '+' || str[i] == '-')
+                {
+                    tsifri = Push(tsifri, str[i]);
+                    i += 1;
+                }tsifri = Push(tsifri, ' ');
+            }
 
+        }
+        if (str[i] == '(')
+        {
+            znaki = PushZn(znaki, '(');
+            continue;
+        }
+        if ((str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/') && str[i + 1] == ' ')
+        {
+            if (IsEmptyZn(znaki) || prior(str[i]) > prior(znaki->value))
+            {
+                znaki = PushZn(znaki, str[i]);
+                continue;
+            }
+            else
+            {
+                while (!IsEmptyZn(znaki) && prior(str[i]) <= prior(znaki->value))
+                {
+                    tsifri = Push(tsifri, znaki->value);
+                    tsifri = Push(tsifri, ' ');
+                    znaki = PopZn(znaki);
+                }
+                znaki = PushZn(znaki, str[i]);
+                continue;
+            }
+        }
+        if (str[i] == ')')
+        {
+            while (znaki->value != '(')
+            {
+                tsifri = Push(tsifri, znaki->value);
+                tsifri = Push(tsifri, ' ');
+                znaki = PopZn(znaki);
+            }
+            znaki = PopZn(znaki); // минус скобка
+        }
+        if ((str[i] >= 65 && str[i] <= 90) || (str[i] >= 97 && str[i] <= 122))
+        {
+            char peremennaya[10] = { 0 };
+            int p = 0;
+            if (str[i - 1] == '-')
+            {
+                tsifri = Push(tsifri, str[i - 1]);
+                // i += 1;
+            }
+            while (str[i] != ' ' && str[i] != '\n' && str[i]!='\0' && str[i]!=-52)// после названия переменной пусть обязательно будет пробел
+            {
+                peremennaya[p] = str[i];
+                i += 1; p += 1;
+            }
+            if ((strcmp(peremennaya, "sin") == 0) || (strcmp(peremennaya, "cos") == 0) || (strcmp(peremennaya, "tg") == 0)
+                || (strcmp(peremennaya, "log") == 0) || (strcmp(peremennaya, "ln") == 0) || (strcmp(peremennaya, "sqrt") == 0)
+                || (strcmp(peremennaya, "pow") == 0) || (strcmp(peremennaya, "abs") == 0) || (strcmp(peremennaya, "exp") == 0)
+                || (strcmp(peremennaya, "real") == 0) || (strcmp(peremennaya, "imag") == 0) || (strcmp(peremennaya, "mag") == 0)
+                || (strcmp(peremennaya, "phase") == 0))
+            {
+                int r = 0;
+                while (peremennaya[r])
+                {
+                    tsifri = Push(tsifri, peremennaya[r]);
+                    r += 1;
+                }
+
+            }
+            for (int j = 0; j < c ; ++j)
+            {
+                int k = 0; char vvod_p[10] = { 0 };
+                while (variables[j][k] != ' ') { vvod_p[k] = variables[j][k]; k += 1; }
+                if (strcmp(peremennaya, vvod_p) == 0)
+                {
+
+                    k += 3;
+                    while (variables[j][k] != '\n' && variables[j][k] != '\0')
+                    {
+                        tsifri = Push(tsifri, variables[j][k]);
+                        k += 1;
+                    }tsifri = Push(tsifri, ' ');
+                }
+            }
+            //  if (strcmp(peremennaya, str2) == 0) сравню потом циклом, в зависимости от части Арсения
+
+
+        }
+        //!!!!!!if (str[i] == какой-нибудь букве), то (while str[i]!=' ')записываем ее в отдельную переменную до пробела 
+        //и сравниваем с введенными переменными,  если совпадает, то записываем значение переменной в стек tsifri)
+    }
+    while (!IsEmptyZn(znaki))
+    {
+        tsifri = Push(tsifri, znaki->value);
+        tsifri = Push(tsifri, ' ');
+        znaki = PopZn(znaki);
+    }
+    printf("Reverse Polish Notation:\n");
+    printStack(tsifri, polsk);
+    polsk[strlen(polsk)] = '\0';
+    COMPLEX Itog = rezultat(polsk);
+    return Itog;
+}
 void Zapis_imag(COMPLEX rez[], int i, int i2, char polsk[])
 {
     i += 1;
@@ -296,6 +418,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -326,6 +449,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 2;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -340,11 +464,13 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
                 while (polsk[i] != ' ') i += 1;
-                //                complex_log(rez[i2]);
+                rez[i2].real=log(rez[i2].real);
+                rez[i2].imag = log(rez[i2].imag);
             }
             else
                 rez[i2].real = log(rez[i2].real);
@@ -354,6 +480,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 2;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -361,13 +488,14 @@ COMPLEX rezultat(char polsk[])
                 rez[i2] = Complex_ln(rez[i2]);
             }
             else
-                rez[i2].real = sin(rez[i2].real);
+                rez[i2].real = log(sqrt(rez[i2].real * rez[i2].real + rez[i2].imag * rez[i2].imag));
             i2 += 1;
         }
         if (polsk[i] == 's' && polsk[i + 1] == 'q' && polsk[i + 2] == 'r' && polsk[i + 3] == 't')
         {
             i += 4;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -382,6 +510,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -398,6 +527,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -414,6 +544,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -430,6 +561,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 4;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
