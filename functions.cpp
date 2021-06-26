@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#define EPS 0.0000001
 #define M_PI 3.14159265358979323846
 #define M_E 2.71828182845904523536
 
@@ -73,7 +74,67 @@ void printStack(const STACK* head, char polsk[])
     }
 }
 
-
+void Iz_double_v_char(double num, char string_num[])
+{
+    double num_copy = num;
+    int before_point = 0;
+    int after_point = 0;
+    int negative = 0;
+    int less_than_one = 0;
+    if (num < 0)
+        ++negative;
+    while (num_copy > 1 || num_copy < -1)
+    {
+        num_copy /= 10;
+        ++before_point;
+    }
+    if (!before_point)
+        ++less_than_one;
+    num_copy = num;
+    if (num_copy > 0)
+    {
+        while (num_copy < 100000000000 && fmod(num_copy * 10, 10.0) > EPS)
+        {
+            num_copy *= 10;
+            ++after_point;
+        }
+    }
+    else
+    {
+        while (num_copy > -100000000000 && fmod(num_copy * 10, -10.0) < -EPS)
+        {
+            num_copy *= 10;
+            ++after_point;
+        }
+    }
+    /*while ((num_copy < 100000000000 || (num_copy > -100000000000 && num_copy < 0)) && (fmod(num_copy * 10, 10.0) > EPS || fmod(num_copy * 10, -10.0) < -EPS))
+    {
+        num_copy *= 10;
+        ++after_point;
+    }*/
+    long long num_copy_ = (long long)num_copy;
+    for (int i = 0; i < after_point; ++i)
+    {
+        string_num[before_point + after_point - i + negative + less_than_one] = num_copy_ % 10 + '0';
+        if (negative)
+            string_num[before_point + after_point - i + negative + less_than_one] += -(num_copy_ % 10) * 2;
+        num_copy_ /= 10;
+    }
+    for (int i = 0; i < before_point; ++i)
+    {
+        string_num[before_point - 1 - i + negative] = num_copy_ % 10 + '0';
+        if (negative)
+            string_num[before_point - 1 - i + negative] += -(num_copy_ % 10) * 2;
+        num_copy_ /= 10;
+    }
+    if (negative)
+        string_num[0] = '-';
+    string_num[before_point + negative + less_than_one] = '.';
+    if (!before_point)
+        string_num[before_point + negative - 1 + less_than_one] = '0';
+    if (!after_point)
+        string_num[before_point + negative + 1 + less_than_one] = '0';
+}
 COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str[100], int len, STACK* tsifri, STACKzn* znaki, int c)
 {
     for (int i = 0; i < len; i++)
@@ -378,7 +439,7 @@ COMPLEX rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i - 1] != ' ') i += 1;
+                    while (polsk[i] != ' ') i += 1;
                 }
             }
             else
@@ -405,7 +466,7 @@ COMPLEX rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i - 1] != ' ') i += 1;
+                    while (polsk[i] != ' ') i += 1;
                 }
             }
             i2 += 1;
