@@ -1,7 +1,9 @@
 #include "functions.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
+#define EPS 0.0000001
 #define M_PI 3.14159265358979323846
 #define M_E 2.71828182845904523536
 
@@ -59,21 +61,261 @@ STACKzn* PopZn(STACKzn* phead)
     return pnew;
 }
 
-void printStack(const STACK* head, char polsk[])
+void printStack(const STACK* head, char polsk[], int q)
 {
     STACK* polskaya = 0; int i = 0;
     while (head) {
         polskaya = Push(polskaya, head->value);
         head = head->pnext;
     }
+
     while (polskaya)
     {
-        printf("%c", polskaya->value); polsk[i] = polskaya->value; i += 1; polskaya = polskaya->pnext;
+        if (!q) { printf("%c", polskaya->value); }
+        polsk[i] = polskaya->value;
+        i += 1;
+        polskaya = polskaya->pnext;
     }
 }
 
+void Iz_double_v_char(double num, char string_num[])
+{
+    double num_copy = num;
+    int before_point = 0;
+    int after_point = 0;
+    int negative = 0;
+    int less_than_one = 0;
+    if (num < 0)
+        ++negative;
+    while (num_copy > 1 || num_copy < -1)
+    {
+        num_copy /= 10;
+        ++before_point;
+    }
+    if (!before_point)
+        ++less_than_one;
+    num_copy = num;
+    if (num_copy > 0)
+    {
+        while (num_copy < 100000000000 && fmod(num_copy * 10, 10.0) > EPS)
+        {
+            num_copy *= 10;
+            ++after_point;
+        }
+    }
+    else
+    {
+        while (num_copy > -100000000000 && fmod(num_copy * 10, -10.0) < -EPS)
+        {
+            num_copy *= 10;
+            ++after_point;
+        }
+    }
+    /*while ((num_copy < 100000000000 || (num_copy > -100000000000 && num_copy < 0)) && (fmod(num_copy * 10, 10.0) > EPS || fmod(num_copy * 10, -10.0) < -EPS))
+    {
+        num_copy *= 10;
+        ++after_point;
+    }*/
+    long long num_copy_ = (long long)num_copy;
+    for (int i = 0; i < after_point; ++i)
+    {
+        string_num[before_point + after_point - i + negative + less_than_one] = num_copy_ % 10 + '0';
+        if (negative)
+            string_num[before_point + after_point - i + negative + less_than_one] += -(num_copy_ % 10) * 2;
+        num_copy_ /= 10;
+    }
+    for (int i = 0; i < before_point; ++i)
+    {
+        string_num[before_point - 1 - i + negative] = num_copy_ % 10 + '0';
+        if (negative)
+            string_num[before_point - 1 - i + negative] += -(num_copy_ % 10) * 2;
+        num_copy_ /= 10;
+    }
+    if (negative)
+        string_num[0] = '-';
+    string_num[before_point + negative + less_than_one] = '.';
+    if (!before_point)
+        string_num[before_point + negative - 1 + less_than_one] = '0';
+    if (!after_point)
+        string_num[before_point + negative + 1 + less_than_one] = '0';
+}
+COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str[100], int len, STACK* tsifri, STACKzn* znaki, int c, int noprint)
+{
+    for (int i = 0; i < len; i++)
+    {
+        if ((str[i] >= '0' && str[i] <= '9') || (str[i] == '-' && (str[i + 1] >= '0' && str[i + 1] <= '9')))
+        {
+            if (str[i] == '-')
+            {
+                tsifri = Pop(tsifri);
+                tsifri = Push(tsifri, str[i]);
+                i += 1;
+            }
+            if ((str[i + 1] < '0' || str[i + 1] >'9') && str[i + 1] != '.')
+            {
+                tsifri = Push(tsifri, str[i]);
+                if (str[i + 1] != '^')tsifri = Push(tsifri, ' ');
+                else {
+                    tsifri = Push(tsifri, '^'); i += 1;
+                }
+            }
+            else {
+                while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i] == '+' || str[i] == '-' || str[i] == '^')
+                {
+                    tsifri = Push(tsifri, str[i]);
+                    i += 1;
+                }
+                if (str[i] == 'j' && str[i + 1] == '^')
+                {
+                    i += 1;
+                    tsifri = Push(tsifri, str[i]);
+                    i += 1;
+                    while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i] == '+' || str[i] == '-')
+                    {
+                        tsifri = Push(tsifri, str[i]);
+                        i += 1;
+                    }
+                }
+                tsifri = Push(tsifri, ' ');
+            }
+
+        }
+        if (str[i] == '(')
+        {
+            znaki = PushZn(znaki, '(');
+            continue;
+        }
+        if ((str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/') && str[i + 1] == ' ')
+        {
+            if (IsEmptyZn(znaki) || prior(str[i]) > prior(znaki->value))
+            {
+                if (str[i] == '-' && str[i + 2] == '-') { znaki = PushZn(znaki, '+'); i += 2; }
+                else {
+                    if (str[i] == '+' && str[i + 2] == '-') {
+                        znaki = PushZn(znaki, '-'); i += 2;
+                    }
+                    else znaki = PushZn(znaki, str[i]);
+                }
+                
+                
+                continue;
+            }
+            else
+            {
+                while (!IsEmptyZn(znaki) && prior(str[i]) <= prior(znaki->value))
+                {
+                    tsifri = Push(tsifri, znaki->value);
+                    tsifri = Push(tsifri, ' ');
+                    znaki = PopZn(znaki);
+                }
+                znaki = PushZn(znaki, str[i]);
+                continue;
+            }
+        }
+        if (str[i] == ')')
+        {
+            while (znaki->value != '(')
+            {
+                tsifri = Push(tsifri, znaki->value);
+                tsifri = Push(tsifri, ' ');
+                znaki = PopZn(znaki);
+            }
+            znaki = PopZn(znaki); // минус скобка
+        }
+        if ((str[i] >= 65 && str[i] <= 90) || (str[i] >= 97 && str[i] <= 122))
+        {
+            char peremennaya[10] = { 0 };
+            int p = 0;
+            if (str[i - 1] == '-')
+            {
+                tsifri = Push(tsifri, str[i - 1]);
+                // i += 1;
+            }
+            while (str[i] != ' ' && str[i] != '\n' && str[i] != '\0' && str[i] != -52 && str[i] != '^')// после названи§ переменной пусть об§зательно будет пробел
+            {
+                peremennaya[p] = str[i];
+                i += 1; p += 1;
+            }
+            if ((strcmp(peremennaya, "sin") == 0) || (strcmp(peremennaya, "cos") == 0) || (strcmp(peremennaya, "tg") == 0)
+                || (strcmp(peremennaya, "log") == 0) || (strcmp(peremennaya, "ln") == 0) || (strcmp(peremennaya, "sqrt") == 0)
+                || (strcmp(peremennaya, "pow") == 0) || (strcmp(peremennaya, "abs") == 0) || (strcmp(peremennaya, "exp") == 0)
+                || (strcmp(peremennaya, "real") == 0) || (strcmp(peremennaya, "imag") == 0) || (strcmp(peremennaya, "mag") == 0)
+                || (strcmp(peremennaya, "phase") == 0))
+            {
+                int r = 0;
+                while (peremennaya[r])
+                {
+                    tsifri = Push(tsifri, peremennaya[r]);
+                    r += 1;
+                }
+
+            }
+            if ((strcmp(peremennaya, "Pi") == 0) || (strcmp(peremennaya, "PI") == 0) || (strcmp(peremennaya, "e") == 0))
+            {
+                if (peremennaya[0] == 'e') {
+                    tsifri = Push(tsifri, '2');
+                    tsifri = Push(tsifri, '.');
+                    tsifri = Push(tsifri, '7');
+                    tsifri = Push(tsifri, '1');
+                    tsifri = Push(tsifri, '8');
+                    tsifri = Push(tsifri, ' ');
+                }
+                else
+                {
+                    tsifri = Push(tsifri, '3');
+                    tsifri = Push(tsifri, '.');
+                    tsifri = Push(tsifri, '1');
+                    tsifri = Push(tsifri, '4');
+                    tsifri = Push(tsifri, '1');
+                    tsifri = Push(tsifri, '5');
+                    tsifri = Push(tsifri, ' ');
 
 
+                }
+            }
+            for (int j = 0; j < c; ++j)
+            {
+                int k = 0; char vvod_p[10] = { 0 };
+                while (variables[j][k] != ' ') { vvod_p[k] = variables[j][k]; k += 1; }
+                if (strcmp(peremennaya, vvod_p) == 0)
+                {
+
+                    k += 3;
+                    while (variables[j][k] != '\n' && variables[j][k] != '\0' && variables[j][k] != 'j')
+                    {
+                        tsifri = Push(tsifri, variables[j][k]);
+                        k += 1;
+                    }
+                    if (str[i] != '^')tsifri = Push(tsifri, ' ');
+                    else {
+                        tsifri = Push(tsifri, '^'); //i += 1;
+                    }
+                }
+            }
+            //  if (strcmp(peremennaya, str2) == 0) сравню потом циклом, в зависимости от части Љрсени§
+
+
+        }
+        //!!!!!!if (str[i] == какой-нибудь букве), то (while str[i]!=' ')записываем ее в отдельную переменную до пробела 
+        //и сравниваем с введенными переменными,  если совпадает, то записываем значение переменной в стек tsifri)
+    }
+    while (!IsEmptyZn(znaki))
+    {
+        tsifri = Push(tsifri, znaki->value);
+        tsifri = Push(tsifri, ' ');
+        znaki = PopZn(znaki);
+    }
+    if (!noprint)
+    {
+        printf("\nReverse Polish Notation:\n");
+    }
+    printStack(tsifri, polsk, noprint);
+
+    polsk[strlen(polsk)] = '\0';
+
+    COMPLEX Itog = rezultat(polsk);
+    return Itog;
+}
 void Zapis_imag(COMPLEX rez[], int i, int i2, char polsk[])
 {
     i += 1;
@@ -140,7 +382,7 @@ void Iz_char_v_double(char polsk[], COMPLEX rez[], int i, int i2)
             double z = 0.1;
             while (polsk[i] >= '0' && polsk[i] <= '9')
             {
-                
+
                 x = x + ((int)polsk[i] - 48) * z;
                 i += 1;
                 z = z / 10;
@@ -193,11 +435,17 @@ COMPLEX rezultat(char polsk[])
         }
         if (polsk[i] == '-' && polsk[i + 1] == ' ')
         {
-            rez[i2 - 2].real = rez[i2 - 2].real - rez[i2 - 1].real;
-            rez[i2 - 1].real = 0;
-            rez[i2 - 2].imag = rez[i2 - 2].imag - rez[i2 - 1].imag;
-            rez[i2 - 1].imag = 0;
-            i2 -= 1;
+            if (i2 != 1) {
+                rez[i2 - 2].real = rez[i2 - 2].real - rez[i2 - 1].real;
+                rez[i2 - 1].real = 0;
+                rez[i2 - 2].imag = rez[i2 - 2].imag - rez[i2 - 1].imag;
+                rez[i2 - 1].imag = 0;
+                i2 -= 1;
+            }
+            else {
+                rez[i2 - 1].real = -rez[i2 - 1].real;
+                rez[i2 - 1].imag = -rez[i2 - 1].imag;
+            }
         }
         if (polsk[i] == '*')
         {
@@ -217,6 +465,8 @@ COMPLEX rezultat(char polsk[])
         }
         if (polsk[i] == '/')
         {
+            //if ((rez[i2 - 1].real != 0 && rez[i2-1].imag==0)||(rez[i2 - 1].real != 0 && rez[i2 - 1].imag != 0)|| (rez[i2 - 1].real == 0 && rez[i2 - 1].imag != 0))
+           // {
             if (rez[i2 - 1].imag != 0 && rez[i2 - 2].imag != 0)
             {
                 rez[i2 - 2] = division(rez[i2 - 1], rez[i2 - 2]);
@@ -228,6 +478,16 @@ COMPLEX rezultat(char polsk[])
                 rez[i2 - 1].real = 0;
             }
             i2 -= 1;
+            //  }
+             // else //если это деление на ноль
+           //   {
+            if (rez[i2 - 1].real == INFINITY || rez[i2 - 1].imag == INFINITY)
+            {
+                printf("\n!!!!!!!!!!!DIVISION BY ZERO!!!!!!!!!!!\n");
+                COMPLEX ZERO; ZERO.real = 8889; ZERO.imag = -9998;
+                return ZERO;
+            }
+            //  }
         }
         if (polsk[i] >= '0' && polsk[i] <= '9')
         {
@@ -256,7 +516,36 @@ COMPLEX rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i - 1] != ' ') i += 1;
+                    while (polsk[i] != ' ' && polsk[i] != '^') i += 1;
+                }
+                if (polsk[i] == '^')                                                                        // Чтепень числа
+                {
+                    i += 1;
+                    double pow1; int minus = 0;
+                    if (polsk[i] == '-') { i++; minus = 1; }
+                    pow1 = (int)polsk[i] - 48; i += 1;
+
+                    while (polsk[i] >= '0' && polsk[i] <= '9')
+                    {
+                        pow1 = pow1 * 10 + ((int)polsk[i] - 48); i += 1;
+                    }
+                    if (polsk[i] == '.')
+                    {
+                        i += 1;
+                        double x = 0;
+                        double z = 0.1;
+                        while (polsk[i] >= '0' && polsk[i] <= '9')
+                        {
+
+                            x = x + ((int)polsk[i] - 48) * z;
+                            i += 1;
+                            z = z / 10;
+                        }
+                        pow1 = pow1 + x;
+                    }
+                    if (minus == 1) pow1 = pow1 * -1;
+                    if (rez[i2].imag != 0) rez[i2] = pow_complex(rez[i2], pow1);
+                    else { rez[i2].real = pow(rez[i2].real, pow1); }
                 }
             }
             else
@@ -283,7 +572,36 @@ COMPLEX rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i - 1] != ' ') i += 1;
+                    while (polsk[i] != ' ' && polsk[i] != '^') i += 1;
+                }
+                if (polsk[i] == '^')                                                                        // Чтепень числа
+                {
+                    i += 1;
+                    double pow1; int minus = 0;
+                    if (polsk[i] == '-') { i++; minus = 1; }
+                    pow1 = (int)polsk[i] - 48; i += 1;
+
+                    while (polsk[i] >= '0' && polsk[i] <= '9')
+                    {
+                        pow1 = pow1 * 10 + ((int)polsk[i] - 48); i += 1;
+                    }
+                    if (polsk[i] == '.')
+                    {
+                        i += 1;
+                        double x = 0;
+                        double z = 0.1;
+                        while (polsk[i] >= '0' && polsk[i] <= '9')
+                        {
+
+                            x = x + ((int)polsk[i] - 48) * z;
+                            i += 1;
+                            z = z / 10;
+                        }
+                        pow1 = pow1 + x;
+                    }
+                    if (minus == 1) pow1 = pow1 * -1;
+                    if (rez[i2].imag != 0) rez[i2] = pow_complex(rez[i2], pow1);
+                    else { pow(rez[i2].real, pow1); }
                 }
             }
             i2 += 1;
@@ -296,11 +614,12 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
                 while (polsk[i] != ' ') i += 1;
-                rez[i2]=complex_sin(rez[i2]);
+                rez[i2] = complex_sin(rez[i2]);
             }
             else rez[i2].real = sin(rez[i2].real);
             i2 += 1;
@@ -309,7 +628,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
-            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i]=='.')i += 1;
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -317,15 +636,16 @@ COMPLEX rezultat(char polsk[])
                 rez[i2] = complex_cos(rez[i2]);
             }
             else
-            
+
                 rez[i2].real = cos(rez[i2].real);
-                i2 += 1;
-            
+            i2 += 1;
+
         }
         if (polsk[i] == 't' && polsk[i + 1] == 'g')
         {
             i += 2;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -340,11 +660,13 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
                 while (polsk[i] != ' ') i += 1;
-                //                complex_log(rez[i2]);
+                rez[i2].real = log(rez[i2].real);
+                rez[i2].imag = log(rez[i2].imag);
             }
             else
                 rez[i2].real = log(rez[i2].real);
@@ -354,6 +676,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 2;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -361,13 +684,14 @@ COMPLEX rezultat(char polsk[])
                 rez[i2] = Complex_ln(rez[i2]);
             }
             else
-                rez[i2].real = sin(rez[i2].real);
+                rez[i2].real = log(sqrt(rez[i2].real * rez[i2].real + rez[i2].imag * rez[i2].imag));
             i2 += 1;
         }
         if (polsk[i] == 's' && polsk[i + 1] == 'q' && polsk[i + 2] == 'r' && polsk[i + 3] == 't')
         {
             i += 4;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -382,6 +706,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -398,6 +723,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -414,6 +740,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 3;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
@@ -422,7 +749,7 @@ COMPLEX rezultat(char polsk[])
                 rez[i2].imag = 0;
             }
             else {
-                rez[i2].real = exp(rez[i2].real);
+                if (rez[i2].real < 0) { rez[i2].real = -(rez[i2].real); }
             }
             i2 += 1;
         }
@@ -430,6 +757,7 @@ COMPLEX rezultat(char polsk[])
         {
             i += 4;
             Iz_char_v_double(polsk, rez, i, i2);
+            while ((polsk[i] >= '0' && polsk[i] <= '9') || polsk[i] == '.')i += 1;
             if (polsk[i] == '+' || polsk[i] == '-')
             {
                 Zapis_imag(rez, i, i2, polsk);
