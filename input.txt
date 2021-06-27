@@ -1,8 +1,8 @@
 exp S22 * S11 * len / v0 + 0.01+2.1j - Pi
-alpha = sqrt s1 * len / ( s1 + s2 ) 
+alpha = sqrt s1 * len / ( 9 - 9 ) 
 s1 = cos S11 * real S22
 s2 = sin S11 * S22
 len = 191.76
 v0 = 299.799 + e
 S11 = - 0.01-0.92j
-S22 = 0.0001+0.997j
+S22 = 0.0001+0.997j / 0
