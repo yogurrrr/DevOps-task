@@ -24,11 +24,16 @@ int main()
     char vivod[100];
     char variables[30][100] = { 0 };
     int c = 0; int c2 = 0; int zero = 0;
+    int noprint = 1;
     while (!feof(input))
     {
         fgets(variables[c], 100, input);
         int varlen = strlen(variables[c]);
-        if (varlen != 0) { variables[c++][varlen - 1] = '\0'; }
+        if (varlen != 0)
+        {
+            variables[c++][varlen - 1] = '\0';
+            printf("%s\n", variables[c - 1]);
+        }
     }
     if (c > 0) {
         c2 = c - 1;
@@ -53,13 +58,14 @@ int main()
                 strcpy(variables2[i2], variables[i]);
                 i2++;
             }
-            COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2);//это переменная в комплексном виде, которая была получена из выражения
+
+            COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2, noprint);//это переменная в комплексном виде, которая была получена из выражения
             if (Itog2.real == 8889 && Itog2.imag == -9998) {
                 zero = 1; break;
             }
             // здесь нужно сообразить функцию, которая преобразует Itog2 из double в char и перезаписать строку в variables[c2];
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! нужно обнулить вариэйблз
-            variables[c2][perezap] = '\0';
+            for (int i = perezap; i < 100; i++) { variables[c2][i] = '\0'; }
             char string_num1[20] = { 0 }; char string_num2[20] = { 0 };
             Iz_double_v_char(Itog2.real, string_num1); int sn1 = 0;
             while (string_num1[sn1] != -52 && string_num1[sn1] != '\0')
@@ -117,10 +123,18 @@ int main()
     //    }
     //    c2 -= 1;
     //}
+    noprint = 0;
     if (zero == 0) {
-        COMPLEX Itog = itog(polsk, vivod, variables, str, len, tsifri, znaki, c);
+        COMPLEX Itog = itog(polsk, vivod, variables, str, len, tsifri, znaki, c, noprint);
         if (Itog.real == 8889 && Itog.imag == -9998) { printf("correct the input"); }
         else
-        printf("\nResult:\n%.4lf %.4lfj", Itog.real, Itog.imag);
+        {
+            if (Itog.imag == 0) {
+                printf("\nResult:\n%.4lf", Itog.real);
+            }
+            else { printf("\nResult:\n%.4lf %.4lfj", Itog.real, Itog.imag); }
+        }
+        /* printf("\nResult:\n%.4lf %.4lfj", Itog.real, Itog.imag);*/
     }
 }
+
