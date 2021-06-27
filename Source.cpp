@@ -115,7 +115,7 @@ int main()
     //    }
     //    c2 -= 1;
     //}
-    if (zero = 0) {
+    if (zero == 0) {
         COMPLEX Itog = itog(polsk, vivod, variables, str, len, tsifri, znaki, c);
         if (Itog.real == 8889 && Itog.imag == -9998) { printf("correct the input"); }
         else

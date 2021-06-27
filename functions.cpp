@@ -153,11 +153,23 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
                 tsifri = Push(tsifri, ' ');
             }
             else {
-                while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i] == '+' || str[i] == '-')
+                while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i] == '+' || str[i] == '-' || str[i]=='^')
                 {
                     tsifri = Push(tsifri, str[i]);
                     i += 1;
-                }tsifri = Push(tsifri, ' ');
+                }
+                if (str[i] == 'j' && str[i+1]=='^')
+                {
+                    i += 1;
+                    tsifri = Push(tsifri, str[i]);
+                    i += 1;
+                    while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i] == '+' || str[i] == '-')
+                    {
+                        tsifri = Push(tsifri, str[i]);
+                        i += 1;
+                    }
+                }
+                tsifri = Push(tsifri, ' ');
             }
 
         }
@@ -477,7 +489,36 @@ COMPLEX rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i] != ' ') i += 1;
+                    while (polsk[i] != ' ' && polsk[i]!='^') i += 1;
+                }
+                if (polsk[i] == '^')                                                                        // Степень числа
+                {
+                    i += 1;
+                    double pow1; int minus = 0;
+                    if (polsk[i] == '-') { i++; minus = 1; }
+                        pow1 = (int)polsk[i] - 48; i += 1;
+
+                        while (polsk[i] >= '0' && polsk[i] <= '9')
+                        {
+                            pow1 = pow1 * 10 + ((int)polsk[i] - 48); i += 1;
+                        }
+                        if (polsk[i] == '.')
+                        {
+                            i += 1;
+                            double x = 0;
+                            double z = 0.1;
+                            while (polsk[i] >= '0' && polsk[i] <= '9')
+                            {
+
+                                x = x + ((int)polsk[i] - 48) * z;
+                                i += 1;
+                                z = z / 10;
+                            }
+                            pow1 = pow1 + x;
+                        }
+                        if (minus == 1) pow1 = pow1 * -1;
+                        if (rez[i2].imag != 0) rez[i2] = pow_complex(rez[i2], pow1);
+                        else { rez[i2].real=pow(rez[i2].real, pow1); }
                 }
             }
             else
@@ -504,7 +545,36 @@ COMPLEX rezultat(char polsk[])
                 if (polsk[i] == '+' || polsk[i] == '-')
                 {
                     Zapis_imag(rez, i, i2, polsk);
-                    while (polsk[i] != ' ') i += 1;
+                    while (polsk[i] != ' ' && polsk[i] != '^') i += 1;
+                }
+                if (polsk[i] == '^')                                                                        // Степень числа
+                {
+                    i += 1;
+                    double pow1; int minus = 0;
+                    if (polsk[i] == '-') { i++; minus = 1; }
+                    pow1 = (int)polsk[i] - 48; i += 1;
+
+                    while (polsk[i] >= '0' && polsk[i] <= '9')
+                    {
+                        pow1 = pow1 * 10 + ((int)polsk[i] - 48); i += 1;
+                    }
+                    if (polsk[i] == '.')
+                    {
+                        i += 1;
+                        double x = 0;
+                        double z = 0.1;
+                        while (polsk[i] >= '0' && polsk[i] <= '9')
+                        {
+
+                            x = x + ((int)polsk[i] - 48) * z;
+                            i += 1;
+                            z = z / 10;
+                        }
+                        pow1 = pow1 + x;
+                    }
+                    if (minus == 1) pow1 = pow1 * -1;
+                    if (rez[i2].imag != 0) rez[i2] = pow_complex(rez[i2], pow1);
+                    else { pow(rez[i2].real, pow1); }
                 }
             }
             i2 += 1;
