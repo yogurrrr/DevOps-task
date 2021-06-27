@@ -189,7 +189,15 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
         {
             if (IsEmptyZn(znaki) || prior(str[i]) > prior(znaki->value))
             {
-                znaki = PushZn(znaki, str[i]);
+                if (str[i] == '-' && str[i + 2] == '-') { znaki = PushZn(znaki, '+'); i += 2; }
+                else {
+                    if (str[i] == '+' && str[i + 2] == '-') {
+                        znaki = PushZn(znaki, '-'); i += 2;
+                    }
+                    else znaki = PushZn(znaki, str[i]);
+                }
+                
+                
                 continue;
             }
             else
