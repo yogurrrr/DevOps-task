@@ -30,61 +30,63 @@ int main()
         int varlen = strlen(variables[c]);
         if (varlen != 0) { variables[c++][varlen - 1] = '\0'; }
     }
-    if(c>0) c2=c-1;
-    while (c2 != -1)
-    {
-        char str2[1000] = { 0 };
-        int i = 0; int len2 = 0;
-        while (variables[c2][i] != '=')i++; i += 2; int perezap = i; // с этого знака начнем перезаписывать выражение
-        while (variables[c2][i] != '/n' && variables[c2][i] != '/0' && variables[c2][i] != 0) {
-            str2[len2] = variables[c2][i]; len2++; i++;
-        }
-        char variables2[30][100] = { 0 };
-        len2 = strlen(str2);
-        str2[len2] = '\0';
-        STACK* tsifri2 = NULL;  //стек с числами
-        STACKzn* znaki2 = 0; //стек со знаками oper
-        char polsk2[1000] = { 0 };
-        char vivod2[1000];
-        int i2 = 0;
-        for (int i = c2 + 1; i < c; ++i)
+    if (c > 0) {
+        c2 = c - 1;
+        while (c2 != -1)
         {
-            strcpy(variables2[i2], variables[i]);
-            i2++;
+            char str2[1000] = { 0 };
+            int i = 0; int len2 = 0;
+            while (variables[c2][i] != '=')i++; i += 2; int perezap = i; // с этого знака начнем перезаписывать выражение
+            while (variables[c2][i] != '/n' && variables[c2][i] != '/0' && variables[c2][i] != 0) {
+                str2[len2] = variables[c2][i]; len2++; i++;
+            }
+            char variables2[30][100] = { 0 };
+            len2 = strlen(str2);
+            str2[len2] = '\0';
+            STACK* tsifri2 = NULL;  //стек с числами
+            STACKzn* znaki2 = 0; //стек со знаками oper
+            char polsk2[1000] = { 0 };
+            char vivod2[1000];
+            int i2 = 0;
+            for (int i = c2 + 1; i < c; ++i)
+            {
+                strcpy(variables2[i2], variables[i]);
+                i2++;
+            }
+            COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2);//это переменная в комплексном виде, которая была получена из выражения
+            if (Itog2.real == 8889 && Itog2.imag == -9998) {
+                zero = 1; break;
+            }
+            // здесь нужно сообразить функцию, которая преобразует Itog2 из double в char и перезаписать строку в variables[c2];
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! нужно обнулить вариэйблз
+            variables[c2][perezap] = '\0';
+            char string_num1[20] = { 0 }; char string_num2[20] = { 0 };
+            Iz_double_v_char(Itog2.real, string_num1); int sn1 = 0;
+            while (string_num1[sn1] != -52 && string_num1[sn1] != '\0')
+            {
+                variables[c2][perezap] = string_num1[sn1];
+                perezap++; sn1++;
+            }
+            if (Itog2.imag < 0)variables[c2][perezap] = '-';
+            else variables[c2][perezap] = '-';
+            perezap++; sn1 = 0;
+            Iz_double_v_char(Itog2.imag, string_num2);
+            while (string_num2[sn1] != -52 && string_num2[sn1] != '\0')
+            {
+                variables[c2][perezap] = string_num2[sn1];
+                perezap++; sn1++;
+            }
+            //string_num1[strlen(string_num1)] = '\0';
+           // printf("%s", string_num1);
+           /* if (Itog2.real < 0)
+            {
+                variables[c2][perezap] = '-';
+                perezap += 1;
+                Itog2.real = -Itog2.real;
+            }*/
+            ///////////////////////////
+            c2 = c2 - 1;
         }
-        COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2);//это переменная в комплексном виде, которая была получена из выражения
-        if (Itog2.real == 8889 && Itog2.imag == -9998) {
-            zero = 1; break;
-        }
-        // здесь нужно сообразить функцию, которая преобразует Itog2 из double в char и перезаписать строку в variables[c2];
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! нужно обнулить вариэйблз
-        variables[c2][perezap]= '\0';
-        char string_num1[20] = { 0 }; char string_num2[20] = { 0 };
-        Iz_double_v_char(Itog2.real, string_num1); int sn1 = 0;
-        while (string_num1[sn1] != -52 && string_num1[sn1] != '\0')
-        {
-            variables[c2][perezap] = string_num1[sn1];
-            perezap++; sn1++;
-        }
-        if (Itog2.imag < 0)variables[c2][perezap] = '-';
-        else variables[c2][perezap] = '-';
-        perezap++; sn1 = 0;
-        Iz_double_v_char(Itog2.imag, string_num2);
-        while (string_num2[sn1] != -52 && string_num2[sn1] != '\0')
-        {
-            variables[c2][perezap] = string_num2[sn1];
-            perezap++; sn1++;
-        }
-        //string_num1[strlen(string_num1)] = '\0';
-       // printf("%s", string_num1);
-       /* if (Itog2.real < 0)
-        {
-            variables[c2][perezap] = '-'; 
-            perezap += 1;
-            Itog2.real = -Itog2.real;
-        }*/
-        ///////////////////////////
-        c2 = c2 -1;
     }
     //int c2 = c-1;
     //while (c2 >= 0)
