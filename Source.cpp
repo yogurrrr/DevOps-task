@@ -9,7 +9,7 @@
 
 int main()
 {
-    // добавл€йте пустую строку пожалуйста
+    // добавл§йте пустую строку пожалуйста
     FILE* input = fopen("input.txt", "rt");
     printf("Expression:\n");
     //char* str = (char*)malloc(sizeof(STACK));
@@ -59,11 +59,11 @@ int main()
                 i2++;
             }
 
-            COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2, noprint);//это переменна€ в комплексном виде, котора€ была получена из выражени€
+            COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2, noprint);//это переменна§ в комплексном виде, котора§ была получена из выражени§
             if (Itog2.real == 8889 && Itog2.imag == -9998) {
                 zero = 1; break;
             }
-            // здесь нужно сообразить функцию, котора€ преобразует Itog2 из double в char и перезаписать строку в variables[c2];
+            // здесь нужно сообразить функцию, котора§ преобразует Itog2 из double в char и перезаписать строку в variables[c2];
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! нужно обнулить вариэйблз
             for (int i = perezap; i < 100; i++) { variables[c2][i] = '\0'; }
             char string_num1[20] = { 0 }; char string_num2[20] = { 0 };
@@ -117,7 +117,7 @@ int main()
     //        COMPLEX Lokal_rez= itog(polsk2, vivod2, variabels2, str2, len2, tsifri2, znaki2, c4);
     //        l = 0;
     //        while (peremen[l - 1] != '=') { variables[c2][l] = peremen[l]; l + 1; } variables[c2][l] = ' ';
-    //        // нужно переписать строку в с2 в массиве variables, начина€ с символа l, заполнив ее числом Lokal_rez
+    //        // нужно переписать строку в с2 в массиве variables, начина§ с символа l, заполнив ее числом Lokal_rez
 
 
     //    }

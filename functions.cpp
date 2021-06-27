@@ -223,7 +223,7 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
                 tsifri = Push(tsifri, str[i - 1]);
                 // i += 1;
             }
-            while (str[i] != ' ' && str[i] != '\n' && str[i] != '\0' && str[i] != -52)// после названия переменной пусть обязательно будет пробел
+            while (str[i] != ' ' && str[i] != '\n' && str[i] != '\0' && str[i] != -52 && str[i] != '^')// после названи¤ переменной пусть об¤зательно будет пробел
             {
                 peremennaya[p] = str[i];
                 i += 1; p += 1;
@@ -277,10 +277,14 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
                     {
                         tsifri = Push(tsifri, variables[j][k]);
                         k += 1;
-                    }tsifri = Push(tsifri, ' ');
+                    }
+                    if (str[i] != '^')tsifri = Push(tsifri, ' ');
+                    else {
+                        tsifri = Push(tsifri, '^'); //i += 1;
+                    }
                 }
             }
-            //  if (strcmp(peremennaya, str2) == 0) сравню потом циклом, в зависимости от части Арсения
+            //  if (strcmp(peremennaya, str2) == 0) сравню потом циклом, в зависимости от части јрсени¤
 
 
         }
@@ -506,7 +510,7 @@ COMPLEX rezultat(char polsk[])
                     Zapis_imag(rez, i, i2, polsk);
                     while (polsk[i] != ' ' && polsk[i] != '^') i += 1;
                 }
-                if (polsk[i] == '^')                                                                        // Степень числа
+                if (polsk[i] == '^')                                                                        // —тепень числа
                 {
                     i += 1;
                     double pow1; int minus = 0;
@@ -562,7 +566,7 @@ COMPLEX rezultat(char polsk[])
                     Zapis_imag(rez, i, i2, polsk);
                     while (polsk[i] != ' ' && polsk[i] != '^') i += 1;
                 }
-                if (polsk[i] == '^')                                                                        // Степень числа
+                if (polsk[i] == '^')                                                                        // —тепень числа
                 {
                     i += 1;
                     double pow1; int minus = 0;
