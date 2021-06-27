@@ -429,17 +429,26 @@ COMPLEX rezultat(char polsk[])
         }
         if (polsk[i] == '/')
         {
-            if (rez[i2 - 1].imag != 0 && rez[i2 - 2].imag != 0)
+            if (rez[i2 - 1].real != 0 && rez[i2-1].imag==0)
             {
-                rez[i2 - 2] = division(rez[i2 - 1], rez[i2 - 2]);
-                rez[i2 - 1].real = 0;
-                rez[i2 - 1].imag = 0;
+                if (rez[i2 - 1].imag != 0 && rez[i2 - 2].imag != 0)
+                {
+                    rez[i2 - 2] = division(rez[i2 - 1], rez[i2 - 2]);
+                    rez[i2 - 1].real = 0;
+                    rez[i2 - 1].imag = 0;
+                }
+                else {
+                    rez[i2 - 2].real = rez[i2 - 2].real / rez[i2 - 1].real;
+                    rez[i2 - 1].real = 0;
+                }
+                i2 -= 1;
             }
-            else {
-                rez[i2 - 2].real = rez[i2 - 2].real / rez[i2 - 1].real;
-                rez[i2 - 1].real = 0;
+            else //если это деление на ноль
+            {
+                printf("\n!!!!!!!!!!!DIVISION BY ZERO!!!!!!!!!!!\n");
+                COMPLEX ZERO; ZERO.real = 8889; ZERO.imag = -9998;
+                return ZERO;
             }
-            i2 -= 1;
         }
         if (polsk[i] >= '0' && polsk[i] <= '9')
         {

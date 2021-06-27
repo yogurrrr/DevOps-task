@@ -23,7 +23,7 @@ int main()
     char polsk[100] = { 0 };
     char vivod[100];
     char variables[30][100] = { 0 };
-    int c = 0; int c2 = 0;
+    int c = 0; int c2 = 0; int zero = 0;
     while (!feof(input))
     {
         fgets(variables[c], 100, input);
@@ -52,7 +52,10 @@ int main()
             strcpy(variables2[i2], variables[i]);
             i2++;
         }
-        COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2); //это переменная в комплексном виде, которая была получена из выражения
+        COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2);//это переменная в комплексном виде, которая была получена из выражения
+        if (Itog2.real == 8889 && Itog2.imag == -9998) {
+            zero = 1; break;
+        }
         // здесь нужно сообразить функцию, которая преобразует Itog2 из double в char и перезаписать строку в variables[c2];
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! нужно обнулить вариэйблз
         variables[c2][perezap]= '\0';
@@ -112,6 +115,10 @@ int main()
     //    }
     //    c2 -= 1;
     //}
-    COMPLEX Itog = itog(polsk, vivod, variables, str, len, tsifri, znaki, c);
-     printf("\nResult:\n%.4lf %.4lfj", Itog.real, Itog.imag); 
+    if (zero = 0) {
+        COMPLEX Itog = itog(polsk, vivod, variables, str, len, tsifri, znaki, c);
+        if (Itog.real == 8889 && Itog.imag == -9998) { printf("correct the input"); }
+        else
+        printf("\nResult:\n%.4lf %.4lfj", Itog.real, Itog.imag);
+    }
 }
