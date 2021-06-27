@@ -150,7 +150,10 @@ COMPLEX itog(char polsk[100], char vivod[100], char variables[30][100], char str
             if ((str[i + 1] < '0' || str[i + 1] >'9') && str[i + 1] != '.')
             {
                 tsifri = Push(tsifri, str[i]);
-                tsifri = Push(tsifri, ' ');
+                if(str[i+1]!='^')tsifri = Push(tsifri, ' ');
+                else {
+                    tsifri = Push(tsifri, '^'); i += 1;
+                }
             }
             else {
                 while ((str[i] >= '0' && str[i] <= '9') || str[i] == '.' || str[i] == '+' || str[i] == '-' || str[i]=='^')
@@ -441,8 +444,8 @@ COMPLEX rezultat(char polsk[])
         }
         if (polsk[i] == '/')
         {
-            if (rez[i2 - 1].real != 0 && rez[i2-1].imag==0)
-            {
+            //if ((rez[i2 - 1].real != 0 && rez[i2-1].imag==0)||(rez[i2 - 1].real != 0 && rez[i2 - 1].imag != 0)|| (rez[i2 - 1].real == 0 && rez[i2 - 1].imag != 0))
+           // {
                 if (rez[i2 - 1].imag != 0 && rez[i2 - 2].imag != 0)
                 {
                     rez[i2 - 2] = division(rez[i2 - 1], rez[i2 - 2]);
@@ -454,13 +457,16 @@ COMPLEX rezultat(char polsk[])
                     rez[i2 - 1].real = 0;
                 }
                 i2 -= 1;
-            }
-            else //если это деление на ноль
-            {
-                printf("\n!!!!!!!!!!!DIVISION BY ZERO!!!!!!!!!!!\n");
-                COMPLEX ZERO; ZERO.real = 8889; ZERO.imag = -9998;
-                return ZERO;
-            }
+          //  }
+           // else //если это деление на ноль
+         //   {
+                if (rez[i2 - 1].real == INFINITY || rez[i2 - 1].imag == INFINITY) 
+                {
+                    printf("\n!!!!!!!!!!!DIVISION BY ZERO!!!!!!!!!!!\n");
+                    COMPLEX ZERO; ZERO.real = 8889; ZERO.imag = -9998;
+                    return ZERO;
+                }
+          //  }
         }
         if (polsk[i] >= '0' && polsk[i] <= '9')
         {
