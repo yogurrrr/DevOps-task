@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
-          path: ${{ env.app_name }}
+          path: ${{ env.app_name }}**
           retention-days: 30
 
 
