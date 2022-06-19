@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:        
+    runs-on: ubuntu-latest
+    env:
+      app_name: calc
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build
+        run: g++ Source.cpp functions.cpp -o ${{ env.app_name }}_${{ runner.os }}
+        
+      - name: 'Upload a Build Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Artifacts
+          path: |
+            ${{ env.app_name }}_${{ runner.os }}**
+            input.txt
+          retention-days: 30
+  
+  failure_message:
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: always() && needs.build.result == 'failure'
+    steps: 
+      - name: 'Send failure message'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: 'The checks were failed'
+      
+      
+  success_message: 
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: always() && needs.build.result == 'success'
+    steps: 
+      - name: 'Send success message'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} created push or pull request on 'master' branch:
+            Commit message: ${{ github.event.commits[0].message }}
+
+            Repository: ${{ github.repository }}
+
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
