@@ -14,8 +14,7 @@ int main()
     printf("Expression:\n");
     //char* str = (char*)malloc(sizeof(STACK));
     char str[100] = { 0 };
-    // fgets(str, SIZE, input);
-    scanf(str);
+    fgets(str, SIZE, input);
     int len = strlen(str);
     str[len] = '\0';
     printf("%s\n", str);
