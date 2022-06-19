@@ -12,20 +12,20 @@ jobs:
   build:        
     runs-on: ubuntu-latest
     env:
-      app_name: calc_${{ runner.os}}
+      app_name: calc
 
     steps:
       - uses: actions/checkout@v3
       
       - name: Build
-        run: g++ Source.cpp functions.cpp -o ${{ env.app_name}}
+        run: g++ Source.cpp functions.cpp -o ${{ env.app_name }}_${{ runner.os }}
         
       - name: 'Upload a Build Artifact'
         uses: actions/upload-artifact@v3
         with:
           name: Artifacts
           path: |
-            ${{ env.app_name }}**
+            ${{ env.app_name }}_${{ runner.os }}**
             input.txt
           retention-days: 30
       - name: 'Send Telegram message on failure'
