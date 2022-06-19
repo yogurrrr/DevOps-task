@@ -9,17 +9,18 @@
 
 int main()
 {
-    // добавл¤йте пустую строку пожалуйста
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     FILE* input = fopen("input.txt", "rt");
     printf("Expression:\n");
     //char* str = (char*)malloc(sizeof(STACK));
     char str[100] = { 0 };
-    fgets(str, SIZE, input);
+    // fgets(str, SIZE, input);
+    scanf(str);
     int len = strlen(str);
     str[len] = '\0';
     printf("%s\n", str);
-    STACK* tsifri = NULL;  //стек с числами
-    STACKzn* znaki = 0; //стек со знаками oper
+    STACK* tsifri = NULL;  //пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    STACKzn* znaki = 0; //пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ oper
     char polsk[100] = { 0 };
     char vivod[100];
     char variables[30][100] = { 0 };
@@ -41,15 +42,15 @@ int main()
         {
             char str2[1000] = { 0 };
             int i = 0; int len2 = 0;
-            while (variables[c2][i] != '=')i++; i += 2; int perezap = i; // с этого знака начнем перезаписывать выражение
+            while (variables[c2][i] != '=')i++; i += 2; int perezap = i; // пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             while (variables[c2][i] != '/n' && variables[c2][i] != '/0' && variables[c2][i] != 0) {
                 str2[len2] = variables[c2][i]; len2++; i++;
             }
             char variables2[30][100] = { 0 };
             len2 = strlen(str2);
             str2[len2] = '\0';
-            STACK* tsifri2 = NULL;  //стек с числами
-            STACKzn* znaki2 = 0; //стек со знаками oper
+            STACK* tsifri2 = NULL;  //пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            STACKzn* znaki2 = 0; //пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ oper
             char polsk2[1000] = { 0 };
             char vivod2[1000];
             int i2 = 0;
@@ -59,12 +60,12 @@ int main()
                 i2++;
             }
 
-            COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2, noprint);//это переменна¤ в комплексном виде, котора¤ была получена из выражени¤
+            COMPLEX Itog2 = itog(polsk2, vivod2, variables2, str2, len2, tsifri2, znaki2, i2, noprint);//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (Itog2.real == 8889 && Itog2.imag == -9998) {
                 zero = 1; break;
             }
-            // здесь нужно сообразить функцию, котора¤ преобразует Itog2 из double в char и перезаписать строку в variables[c2];
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! нужно обнулить вариэйблз
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Itog2 пїЅпїЅ double пїЅ char пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ variables[c2];
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////!!!!!!!!!!!! пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             for (int i = perezap; i < 100; i++) { variables[c2][i] = '\0'; }
             char string_num1[20] = { 0 }; char string_num2[20] = { 0 };
             Iz_double_v_char(Itog2.real, string_num1); int sn1 = 0;
@@ -112,12 +113,12 @@ int main()
     //        char variabels2[30][100];
     //        while (c3 <= c) { strcpy(variabels2[c4], variables[c3]); c4 += 1; c3 += 1; }
     //        char polsk2[100] = { 0 };
-    //        char vivod2[100]; STACK* tsifri2 = NULL;  //стек с числами
+    //        char vivod2[100]; STACK* tsifri2 = NULL;  //пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     //        STACKzn* znaki2 = 0;
     //        COMPLEX Lokal_rez= itog(polsk2, vivod2, variabels2, str2, len2, tsifri2, znaki2, c4);
     //        l = 0;
     //        while (peremen[l - 1] != '=') { variables[c2][l] = peremen[l]; l + 1; } variables[c2][l] = ' ';
-    //        // нужно переписать строку в с2 в массиве variables, начина¤ с символа l, заполнив ее числом Lokal_rez
+    //        // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅ2 пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ variables, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ l, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Lokal_rez
 
 
     //    }
