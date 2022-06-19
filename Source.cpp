@@ -10,7 +10,7 @@
 int main()
 {
     // ��������� ������ ������ ����������
-    FILE* input = fopen("input.txt", "rt");
+    FILE* input = fopen("input.txt", "rt")
     printf("Expression:\n");
     //char* str = (char*)malloc(sizeof(STACK));
     char str[100] = { 0 };
