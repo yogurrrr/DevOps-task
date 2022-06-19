@@ -13,16 +13,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04, windows-latest]
+        
     runs-on: ${{ matrix.os }}
     env:
       app_name: calc_${{ matrix.os}}
 
     steps:
       - uses: actions/checkout@v3
+      
       - name: Build
         run: g++ *.cpp -o ${{ env.app_name}}
-      - name: Upload artifact
-        uses: actions/upload-artifact
+        
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
