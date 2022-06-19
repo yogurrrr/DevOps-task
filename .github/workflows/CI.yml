@@ -28,13 +28,20 @@ jobs:
             ${{ env.app_name }}**
             input.txt
           retention-days: 30
-      - name: 'Send Telegram message'
+      - name: 'Send Telegram message on failure'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: 'The checks were failed'
+
+      - name: 'Send Telegram message on success'
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ${{ github.actor }} created commit:
+            ${{ github.actor }} created push or pull request on 'master' branch:
             Commit message: ${{ github.event.commits[0].message }}
             
             Repository: ${{ github.repository }}
